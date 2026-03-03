@@ -15,12 +15,17 @@ class SecurityRegressionTests(StaticLiveServerTestCase):
         
         if browser == 'firefox':
             from selenium.webdriver.firefox.options import Options as FirefoxOptions
-            from selenium.webdriver.firefox.service import Service as FirefoxService
-            from webdriver_manager.firefox import GeckoDriverManager
             opts = FirefoxOptions()
             opts.add_argument("--headless")
-            service = FirefoxService(GeckoDriverManager().install())
-            cls.selenium = webdriver.Firefox(service=service, options=opts)
+            try:
+                # Intentem utilitzar el driver ja present al sistema (GHA)
+                cls.selenium = webdriver.Firefox(options=opts)
+            except Exception:
+                # Si falla, provem amb webdriver-manager (local/altres)
+                from selenium.webdriver.firefox.service import Service as FirefoxService
+                from webdriver_manager.firefox import GeckoDriverManager
+                service = FirefoxService(GeckoDriverManager().install())
+                cls.selenium = webdriver.Firefox(service=service, options=opts)
         else:
             from selenium.webdriver.chrome.options import Options as ChromeOptions
             from selenium.webdriver.chrome.service import Service as ChromeService
