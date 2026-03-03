@@ -10,28 +10,19 @@ class SecurityRegressionTests(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         
-        # Selecció de navegador segons entorn
-        browser = os.environ.get('SELENIUM_BROWSER', 'chrome').lower()
+        from selenium.webdriver.chrome.options import Options as ChromeOptions
+        opts = ChromeOptions()
+        opts.add_argument("--headless")
+        opts.add_argument("--no-sandbox")
+        opts.add_argument("--disable-dev-shm-usage")
         
-        if browser == 'firefox':
-            from selenium.webdriver.firefox.options import Options as FirefoxOptions
-            opts = FirefoxOptions()
-            opts.add_argument("--headless")
-            try:
-                # Intentem utilitzar el driver ja present al sistema (GHA)
-                cls.selenium = webdriver.Firefox(options=opts)
-            except Exception:
-                # Si falla, provem amb webdriver-manager (local/altres)
-                from selenium.webdriver.firefox.service import Service as FirefoxService
-                from webdriver_manager.firefox import GeckoDriverManager
-                service = FirefoxService(GeckoDriverManager().install())
-                cls.selenium = webdriver.Firefox(service=service, options=opts)
-        else:
-            from selenium.webdriver.chrome.options import Options as ChromeOptions
+        try:
+            # A GitHub Actions el chromedriver ja sol estar al PATH
+            cls.selenium = webdriver.Chrome(options=opts)
+        except Exception:
+            # Per a local, usem webdriver-manager
             from selenium.webdriver.chrome.service import Service as ChromeService
             from webdriver_manager.chrome import ChromeDriverManager
-            opts = ChromeOptions()
-            opts.add_argument("--headless")
             service = ChromeService(ChromeDriverManager().install())
             cls.selenium = webdriver.Chrome(service=service, options=opts)
             
@@ -55,6 +46,11 @@ class SecurityRegressionTests(StaticLiveServerTestCase):
         self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
         
         # 2. LOGIN (PUNT 2.2.3): Implementa el login amb 'analista1'
+        # Depuració si falla a GHA
+        if "Login" not in self.selenium.title:
+            print(f"DEBUG: Títol actual: {self.selenium.title}")
+            print(f"DEBUG: URL actual: {self.selenium.current_url}")
+
         username_input = self.selenium.find_element(By.NAME, "username")
         username_input.send_keys("analista1")
         

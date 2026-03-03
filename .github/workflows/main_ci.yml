@@ -24,14 +24,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Install Firefox and Geckodriver
-      uses: browser-actions/setup-firefox@latest
-    - uses: browser-actions/setup-geckodriver@latest
+    - name: Set up Chrome
+      uses: browser-actions/setup-chrome@latest
+    - name: Set up Chromedriver
+      uses: browser-actions/setup-chromedriver@latest
 
     - name: Run Security Tests
       env:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-        SELENIUM_BROWSER: firefox
       run: |
         # Executem els tests
         python manage.py test incidents.tests_selenium
