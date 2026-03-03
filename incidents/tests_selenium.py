@@ -37,6 +37,13 @@ class SecurityRegressionTests(StaticLiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
+    def setUp(self):
+        # Assegurem que l'usuari de la fixture tingui la contrasenya que el test espera
+        from django.contrib.auth.models import User
+        u = User.objects.get(username='analista1')
+        u.set_password('password123')
+        u.save()
+
     def test_role_restriction(self):
         """AUDITORIA: L'analista no ha d'entrar a /admin/"""
         # 1. Anar a la pàgina de login
