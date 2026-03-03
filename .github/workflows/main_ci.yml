@@ -33,5 +33,7 @@ jobs:
       env:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       run: |
-        # Executem els tests
-        python manage.py test incidents.tests_selenium
+        python manage.py makemigrations
+        python manage.py migrate
+        # Executem els tests amb verbositat alta
+        python manage.py test incidents.tests_selenium -v 2

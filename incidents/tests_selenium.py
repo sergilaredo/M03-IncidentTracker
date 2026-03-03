@@ -50,6 +50,9 @@ class SecurityRegressionTests(StaticLiveServerTestCase):
         if "Login" not in self.selenium.title:
             print(f"DEBUG: Títol actual: {self.selenium.title}")
             print(f"DEBUG: URL actual: {self.selenium.current_url}")
+            if "500" in self.selenium.title or "Error" in self.selenium.title:
+                print("DEBUG: Contingut de la pàgina (Traceback):")
+                print(self.selenium.page_source)
 
         username_input = self.selenium.find_element(By.NAME, "username")
         username_input.send_keys("analista1")
