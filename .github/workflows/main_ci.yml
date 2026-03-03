@@ -25,9 +25,9 @@ jobs:
         pip install -r requirements.txt
 
     - name: Set up Chrome
-      uses: browser-actions/setup-chrome@latest
-    - name: Set up Chromedriver
-      uses: browser-actions/setup-chromedriver@latest
+      run: |
+        # Ubuntu runner ja té Chrome, només ens assegurem que webdriver-manager el trobi
+        google-chrome --version
 
     - name: Run Security Tests
       env:
