@@ -10,10 +10,6 @@ jobs:
   test-security:
     runs-on: ubuntu-latest
 
-    services:
-      # Si el test necessités Postgres real, el posaríem aquí. 
-      # Però StaticLiveServerTestCase amb SQLite (per defecte en tests) sol ser suficient si no depenem de extensions de Postgres.
-      # Nota: En aquesta pràctica, el dumpdata és de Postgres, però el test el carregarà en SQLite de memòria.
 
     steps:
     - uses: actions/checkout@v4
