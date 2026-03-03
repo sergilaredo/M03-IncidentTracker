@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buscador d'Incidents - Seguretat AppSec</title>
+</head>
+<body>
+    <h2>Cercador d'Incidents (Mode Segur - Hardening)</h2>
+    <form method="GET" action="/buscar/">
+        <input type="text" name="q" value="{{ query }}" placeholder="Cerca per títol...">
+        <button type="submit">Cercar</button>
+    </form>
+
+    <hr>
+
+    <h3>Resultats:</h3>
+    <ul>
+    {% for incident in resultats %}
+        <li><strong>Títol:</strong> {{ incident.titol }} | <strong>Descripció:</strong> {{ incident.descripcio }}</li>
+    {% empty %}
+        <li>No s'han trobat incidents.</li>
+    {% endfor %}
+    </ul>
+
+    <p style="color: gray;">
+    Query executada (Escapada per Django): <code>SELECT * FROM incidents_incident WHERE titol = '{{ query }}'</code>
+    </p>
+</body>
+</html>

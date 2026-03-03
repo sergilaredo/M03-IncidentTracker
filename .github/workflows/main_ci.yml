@@ -1,0 +1,41 @@
+name: IncidentTracker CI (Policia Automàtic)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test-security:
+    runs-on: ubuntu-latest
+
+    services:
+      # Si el test necessités Postgres real, el posaríem aquí. 
+      # Però StaticLiveServerTestCase amb SQLite (per defecte en tests) sol ser suficient si no depenem de extensions de Postgres.
+      # Nota: En aquesta pràctica, el dumpdata és de Postgres, però el test el carregarà en SQLite de memòria.
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install Firefox and Geckodriver
+      uses: browser-actions/setup-firefox@latest
+    - uses: browser-actions/setup-geckodriver@latest
+
+    - name: Run Security Tests
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        SELENIUM_BROWSER: firefox
+      run: |
+        # Executem els tests
+        python manage.py test incidents.tests_selenium

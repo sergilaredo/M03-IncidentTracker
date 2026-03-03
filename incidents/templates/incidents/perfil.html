@@ -1,0 +1,6 @@
+<form method="POST">
+    {% csrf_token %}
+    <label>Introdueix el teu nou correu electrònic:</label><br>
+    <input type="text" name="email" style="width: 500px;" placeholder="exemple@correu.com">
+    <button type="submit">Actualitzar perfil</button>
+</form>

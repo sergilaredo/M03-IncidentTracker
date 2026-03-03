@@ -1,0 +1,1 @@
+path('incident/<int:incident_id>/', detall_incident_vulnerable, name='detall_incident'),
